@@ -5,8 +5,8 @@ nixPkgs = ["nodejs-20_x", "python310"]
 cmds = ["npm ci"]
 
 [phases.build]
-cmds = ["npm run build"]
+cmds = ["node scripts/init-db.js || true", "npm run build"]
 
 [start]
-cmd = "npm start"
+cmd = "sh -c 'node scripts/init-db.js || true; node scripts/seed-db.js || true; npm start'"
 

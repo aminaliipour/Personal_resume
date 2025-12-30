@@ -3,6 +3,10 @@ import Footer from '@/components/Footer';
 import Image from 'next/image';
 import { Briefcase, GraduationCap, Code } from 'lucide-react';
 
+// Force dynamic rendering to avoid build-time database access
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 async function getData() {
   // In a real production deployment, this should use an absolute URL or direct DB call if server component
   // Since we are in Next.js App Router, we can call DB directly in Server Components

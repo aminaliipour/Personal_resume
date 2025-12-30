@@ -2,7 +2,8 @@ const Database = require('better-sqlite3');
 const path = require('path');
 const bcrypt = require('bcryptjs');
 
-const dbPath = path.join(process.cwd(), 'portfolio', 'portfolio.db');
+// Use the same path as lib/db.ts
+const dbPath = path.join(process.cwd(), 'portfolio.db');
 const db = new Database(dbPath);
 
 console.log('Seeding database...');

@@ -2,24 +2,11 @@ const Database = require('better-sqlite3');
 const path = require('path');
 const fs = require('fs');
 
-const dbPath = path.join(process.cwd(), 'portfolio', 'portfolio.db');
-const dbDir = path.dirname(dbPath);
+// Use the same path as lib/db.ts
+const dbPath = path.join(process.cwd(), 'portfolio.db');
 
-// Ensure directory exists (though it should be root)
-if (!fs.existsSync(dbDir)) {
-    fs.mkdirSync(dbDir, { recursive: true });
-}
-
-// Check if we are running from root or portfolio dir
-let finalDbPath = 'portfolio.db';
-if (fs.existsSync(path.join(process.cwd(), 'portfolio'))) {
-   finalDbPath = path.join(process.cwd(), 'portfolio', 'portfolio.db');
-} else if (path.basename(process.cwd()) === 'portfolio') {
-   finalDbPath = 'portfolio.db';
-}
-
-console.log(`Initializing DB at: ${finalDbPath}`);
-const db = new Database(finalDbPath);
+console.log(`Initializing DB at: ${dbPath}`);
+const db = new Database(dbPath);
 
 // Create Tables
 const schema = `
