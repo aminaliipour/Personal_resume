@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "node scripts/init-db.js || true; node scripts/seed-db.js || true; next start",
     "lint": "eslint"
   },
   "dependencies": {

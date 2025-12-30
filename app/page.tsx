@@ -12,12 +12,31 @@ async function getData() {
   // Since we are in Next.js App Router, we can call DB directly in Server Components
   const { db } = await import('@/lib/db');
   
-  const profile = db.prepare('SELECT * FROM profile LIMIT 1').get();
-  const experience = db.prepare('SELECT * FROM experience').all();
-  const education = db.prepare('SELECT * FROM education').all();
-  const skills = db.prepare('SELECT * FROM skills').all();
+  const profile = db.prepare('SELECT * FROM profile LIMIT 1').get() as any;
+  const experience = db.prepare('SELECT * FROM experience').all() as any[];
+  const education = db.prepare('SELECT * FROM education').all() as any[];
+  const skills = db.prepare('SELECT * FROM skills').all() as any[];
 
-  return { profile, experience, education, skills };
+  // If profile is empty, return default values
+  if (!profile) {
+    return {
+      profile: {
+        name: 'Your Name',
+        title: 'Your Title',
+        email: '',
+        phone: '',
+        github: '',
+        address: '',
+        summary: 'Add your summary here',
+        image: null
+      },
+      experience: [],
+      education: [],
+      skills: []
+    };
+  }
+
+  return { profile, experience: experience || [], education: education || [], skills: skills || [] };
 }
 
 export default async function Home() {

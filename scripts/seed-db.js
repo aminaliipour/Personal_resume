@@ -4,16 +4,27 @@ const bcrypt = require('bcryptjs');
 
 // Use the same path as lib/db.ts
 const dbPath = path.join(process.cwd(), 'portfolio.db');
-const db = new Database(dbPath);
 
-console.log('Seeding database...');
+try {
+  const db = new Database(dbPath);
 
-// Clear existing data
-db.exec('DELETE FROM users');
-db.exec('DELETE FROM profile');
-db.exec('DELETE FROM experience');
-db.exec('DELETE FROM education');
-db.exec('DELETE FROM skills');
+  // Check if database already has data
+  const profileCount = db.prepare('SELECT COUNT(*) as count FROM profile').get();
+  
+  if (profileCount.count > 0) {
+    console.log('Database already has data, skipping seed.');
+    db.close();
+    process.exit(0);
+  }
+
+  console.log('Seeding database...');
+
+  // Clear existing data (should be empty, but just in case)
+  db.exec('DELETE FROM users');
+  db.exec('DELETE FROM profile');
+  db.exec('DELETE FROM experience');
+  db.exec('DELETE FROM education');
+  db.exec('DELETE FROM skills');
 
 // 1. Admin User
 const salt = bcrypt.genSaltSync(10);
@@ -88,3 +99,8 @@ const insertSkill = db.prepare('INSERT INTO skills (category, items) VALUES (@ca
 skills.forEach(skill => insertSkill.run(skill));
 
 console.log('Database seeded successfully.');
+db.close();
+} catch (error) {
+  console.error('Error seeding database:', error);
+  process.exit(1);
+}
